@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle, FileText, AlertCircle } from "lucide-react";
+import { extractTextFromPdf } from "@/lib/PdfUtils";
 
 const DashboardContent = () => {
   const router = useRouter();
@@ -35,6 +36,32 @@ const DashboardContent = () => {
     if (!e.target.files?.[0]) return null;
     setSelectedFile(e.target.files[0]);
   };
+
+  const handleAnalyze = useCallback(async ()=>{
+    if(!selectedFile){
+      setError("Please select a PDF file to analyze.");
+      return;
+    }
+
+    setIsloading(true);
+    setError("");
+    setSummary("");
+
+    try{
+      //extract text from the PDF file
+      const text = await extractTextFromPdf(selectedFile);
+      setSummary(text);
+      // send the text to API for analysis
+      // const response = ""
+
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "File unable to analyze");
+    } finally {
+      setIsloading(false);
+    }
+  },[selectedFile])
+
+
   return (
     <div className="space-y-10 mt-24 max-w-4xl mx-auto">
       {showPaymentSuccess && (
@@ -68,7 +95,7 @@ const DashboardContent = () => {
 
         {/* Analyze button - disabled when no file selected or during loading */}
         <button
-          // onClick={handleAnalyze}
+          onClick={handleAnalyze}
           disabled={!selectedFile || isLoading}
           className="group relative inline-flex items-center justify-center w-full gap-2 rounded-xl bg-black px-4 py-4
                                 text-white transition-all hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -108,7 +135,8 @@ const DashboardContent = () => {
           </div>
           {/* Formatted summary content */}
           <div className="max-w-none px-6 py-5 rounded-xl bg-[#0f0f13] border border-[#2A2A35]">
-            {/* {formatSummaryContent(summary)} */} <p>summarisec content</p>
+            {/* {formatSummaryContent(summary)}  */}
+            <p>{summary}</p>
           </div>
         </div>
       )}
