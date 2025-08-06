@@ -1,6 +1,7 @@
 "use client"
 
 import { FileText, Search, Zap } from "lucide-react"
+import GlowingButton from "./GlowingButton"
 
 const rings = [
     { width: 300, opacity: 0.7 },
@@ -55,7 +56,7 @@ const Hero = () =>{
                     Extract insights from your documents instantly with our AI-powered analysis tool
                 </p>
 
-                <a href="">glowing button</a>
+                <GlowingButton text="Get Started" href="/pricing" />
             </div>
             
             {/* Feature icons */}
