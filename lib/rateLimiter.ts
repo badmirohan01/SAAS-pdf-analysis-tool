@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { LRUCache } from "lru-cache";
 import { RATE_LIMIT } from "./Constants";
 import { ApiError } from "./errors";
@@ -9,7 +9,7 @@ const rateLimitCache = new LRUCache<string, number>({
     ttl: RATE_LIMIT.CACHE_TTL_MS
 })
 
-export const rateLimiter = async (req: NextResponse) => {
+export const rateLimiter = async (req: NextRequest) => {
     const ip = req.headers.get("x-forwarded-for") || '127.0.0.1'
     const limit = RATE_LIMIT.REQUESTS_PER_MINUTE
     const currentCount = (rateLimitCache.get(ip) || 0) as number
