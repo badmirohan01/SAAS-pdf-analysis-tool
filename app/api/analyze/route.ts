@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 
-import { API, PDF_PROCESSING } from "@/lib/Constants";
+import { API, PDF_PROCESSING } from "@/lib/constants";
 import { rateLimiter } from "@/lib/rateLimiter";
 import { ApiError, handleApiError } from "@/lib/errors";
 

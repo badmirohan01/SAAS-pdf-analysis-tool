@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { LRUCache } from "lru-cache";
-import { RATE_LIMIT } from "./Constants";
+import { RATE_LIMIT } from "./constants";
 import { ApiError } from "./errors";
-import { error } from "console";
 
 const rateLimitCache = new LRUCache<string, number>({
     max: RATE_LIMIT.CACHE_MAX_SIZE,

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle, FileText, AlertCircle } from "lucide-react";
-import { extractTextFromPdf } from "@/lib/PdfUtils";
+import { extractTextFromPdf } from "@/lib/pdfUtils";
 
 const DashboardContent = () => {
   const router = useRouter();
@@ -37,8 +37,8 @@ const DashboardContent = () => {
     setSelectedFile(e.target.files[0]);
   };
 
-  const handleAnalyze = useCallback(async ()=>{
-    if(!selectedFile){
+  const handleAnalyze = useCallback(async () => {
+    if (!selectedFile) {
       setError("Please select a PDF file to analyze.");
       return;
     }
@@ -47,20 +47,33 @@ const DashboardContent = () => {
     setError("");
     setSummary("");
 
-    try{
-      //extract text from the PDF file
+    try {
       const text = await extractTextFromPdf(selectedFile);
-      setSummary(text);
-      // send the text to API for analysis
-      // const response = ""
 
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ text: text.substring(0, 10000) }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`
+        );
+      }
+
+      const data = await response.json();
+      setSummary(data.summary || "No summary was generated.");
     } catch (err) {
       setError(err instanceof Error ? err.message : "File unable to analyze");
     } finally {
       setIsloading(false);
     }
-  },[selectedFile])
-
+  }, [selectedFile]);
 
   return (
     <div className="space-y-10 mt-24 max-w-4xl mx-auto">
