@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle, FileText, AlertCircle } from "lucide-react";
-import { extractTextFromPdf } from "@/lib/pdfUtils";
+// import { extractTextFromPdf } from "@/lib/pdfUtils";
 
 const DashboardContent = () => {
   const router = useRouter();
@@ -48,6 +48,7 @@ const DashboardContent = () => {
     setSummary("");
 
     try {
+      const { extractTextFromPdf } = await import("@/lib/pdfUtils");
       const text = await extractTextFromPdf(selectedFile);
 
       const response = await fetch("/api/analyze", {
@@ -74,6 +75,44 @@ const DashboardContent = () => {
       setIsloading(false);
     }
   }, [selectedFile]);
+
+  const formatSummaryContent = (text: string) => {
+    const paragraphs = text.split("\n").filter((p) => p.trim() !== "");
+
+    return paragraphs.map((paragraph, index) => {
+      if (paragraph.startsWith("# ")) {
+        return (
+          <h2
+            key={index}
+            className="text-2xl font-bold mt-6 mb-4 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent"
+          >
+            {paragraph.replace(/^# /, "")}
+          </h2>
+        );
+      }
+
+      if (paragraph.startsWith("## ")) {
+        return (
+          <h3
+            key={index}
+            className="text-xl font-semibold mt-6 mb-4 from-purple-300 border-b border-purple-500/20 pb-2"
+          >
+            {paragraph.replace(/^## /, "")}
+          </h3>
+        );
+      }
+
+      return (
+        <p
+          key={index}
+          className="mb-4 text-gray-300 leading-relaxed hover:text-white transition-colors first-letter:text-lg first-letter:font-medium"
+        >
+          {" "}
+          {paragraph}{" "}
+        </p>
+      );
+    });
+  };
 
   return (
     <div className="space-y-10 mt-24 max-w-4xl mx-auto">
@@ -148,8 +187,7 @@ const DashboardContent = () => {
           </div>
           {/* Formatted summary content */}
           <div className="max-w-none px-6 py-5 rounded-xl bg-[#0f0f13] border border-[#2A2A35]">
-            {/* {formatSummaryContent(summary)}  */}
-            <p>{summary}</p>
+            {formatSummaryContent(summary)}
           </div>
         </div>
       )}
