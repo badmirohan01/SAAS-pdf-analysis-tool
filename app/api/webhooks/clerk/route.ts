@@ -1,5 +1,6 @@
 import { verifyWebhook } from "@clerk/nextjs/webhooks";
 import { NextRequest } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,7 +20,14 @@ export async function POST(req: NextRequest) {
       try {
         const fullname = `${first_name || ""} ${last_name || ""}`.trim();
 
-        //todo : call prisma to create user
+        await prisma.user.create({
+          data: {
+            id,
+            email: email_addresses[0].email_address,
+            name: fullname || null,
+          },
+        });
+
         console.log(`User with ${id} was inserted into database`);
       } catch (error) {
         console.log("Error saving user to database", error);
