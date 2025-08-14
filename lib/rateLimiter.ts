@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { LRUCache } from "lru-cache";
 import { RATE_LIMIT } from "./constants";
 import { ApiError } from "./errors";
