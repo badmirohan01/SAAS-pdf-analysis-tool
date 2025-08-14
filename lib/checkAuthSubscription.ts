@@ -25,7 +25,7 @@ export async function checkAuthenticationAndSubscription(
   }
 
   if (waitMs > 0) {
-    await new Promise((resolve) => setTimeout(() => {}, waitMs));
+    await new Promise((resolve) => setTimeout(resolve, waitMs));
   }
   let subscription = null;
   try {
@@ -47,6 +47,6 @@ export async function checkAuthenticationAndSubscription(
     userId: userId,
     isAuthenticated: true,
     hasSubsctiption: true,
-    redirectUrl: hasActiveSubscription ? undefined : `/pricing`,
+    redirectUrl: hasActiveSubscription ? undefined : "/pricing",
   };
 }
