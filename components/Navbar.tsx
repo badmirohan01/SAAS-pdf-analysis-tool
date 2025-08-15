@@ -72,9 +72,9 @@ const Navbar = () =>{
                 </div>
 
                 {/* Mobile menu navigation */}
-                <div className="md:hidden fixed inset-0 z-40">
+                <div className="md:hidden fixed inset-0">
                     <div className={`absolute inset-0 backdrop-blur-xl transition-opacity duration-300
-                         ${isOpen ? "opacity-100" : "opacity-0"}`} onClick={closeMenu} />
+                         ${isOpen ? "opacity-100 z-40" : "opacity-0 z-0"}`} onClick={closeMenu} />
 
                     <div className={`absolute top-16 left-0 right-0 border-b border-purple-300/5 shadow-lg transition-all duration-300 ease-in-out
                                          ${isOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}>

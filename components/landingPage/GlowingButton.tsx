@@ -6,7 +6,7 @@ interface ButtonGlowingProps {
   href?: string;
 }
 
-const GlowingButton = ({ text, href = "#" }: ButtonGlowingProps) => {
+const GlowingButton = ({ text, href = '#' }: ButtonGlowingProps) => {
   return (
     <div className="p-4 flex items-center justify-center">
       <Link
